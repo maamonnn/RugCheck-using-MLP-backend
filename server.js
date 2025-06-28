@@ -16,23 +16,23 @@ const wss = new WebSocket.Server({ server });
 
 app.get('/api/market-summary', async (req, res) => {
   try {
-    const [globalRes, fearRes] = await Promise.all([
-      axios.get('https://api.coingecko.com/api/v3/global'),
-      axios.get('https://api.alternative.me/fng/')
-    ]);
-    const globalData = globalRes.data.data;
-    const fearData = fearRes.data.data[0];
+    const response = await axios.get('https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest', {
+      headers: {
+        'X-CMC_PRO_API_KEY': process.env.CMC_API_KEY
+      }
+    });
+
+    const data = response.data.data;
 
     res.json({
-      totalMarketCapUSD: globalData.total_market_cap.usd,
-      btcMarketCapPercent: globalData.market_cap_percentage.btc,
-      solMarketCapPercent: globalData.market_cap_percentage.sol,
-      btcDominance: globalData.market_cap_percentage.btc,
-      fearIndex: fearData.value,
-      fearLevel: fearData.value_classification
+      totalMarketCapUSD: data.quote.USD.total_market_cap,
+      btcDominance: data.btc_dominance,
+      ethDominance: data.eth_dominance,
+      activeCryptocurrencies: data.active_cryptocurrencies,
+      fearIndex: 'N/A',
     });
-  } catch(err) {
-    console.error('API error:', err.message);
+  } catch (error) {
+    console.error('[CoinMarketCap API Error]', error.response?.data || error.message);
     res.status(500).json({ error: 'Failed to fetch market summary' });
   }
 });
