@@ -63,7 +63,6 @@ app.get('/api/rugcheck/:token', async (req, res) => {
   const token = req.params.token;
 
   try {
-    // ✅ Step 1: Search token info from Jupiter
     const searchRes = await axios.get(`${JUPITER_SEARCH_API}?query=${token}`);
     const tokens = searchRes.data;
     if (!tokens.length) {
@@ -116,7 +115,6 @@ app.get('/api/rugcheck/:token', async (req, res) => {
   }
 });
 
-// WebSocket untuk streaming data harga solana dan bitcoin (aktifkan vpn karena binance tidak bisa di akses di indo)
 const solanaWS = new WebSocket('wss://stream.binance.com:9443/ws/solusdt@trade');
 const btcWS = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade');
 
