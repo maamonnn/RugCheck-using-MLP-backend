@@ -27,9 +27,7 @@ app.get('/api/market-summary', async (req, res) => {
     res.json({
       totalMarketCapUSD: data.quote.USD.total_market_cap,
       btcDominance: data.btc_dominance,
-      ethDominance: data.eth_dominance,
       activeCryptocurrencies: data.active_cryptocurrencies,
-      fearIndex: 'N/A',
     });
   } catch (error) {
     console.error('[CoinMarketCap API Error]', error.response?.data || error.message);
